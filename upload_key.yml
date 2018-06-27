@@ -1,0 +1,14 @@
+---
+ - hosts: localhost
+   connection: local
+
+   tasks:
+   - name: create_key_via_ansible
+     ec2_key: 
+       name: key_created_with_ansible
+       key_material: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCr5nVW6pzUIMS5LQ2yRk5dsp4JcGYiBhQeWuduXoRFKIP927QK4iNxYTH8ljCeHLR9WR0u0265Fse65rhqZORsJWGk900G7fcUbpBki5a7DELM8Apg6ysJEi6DISbb6bIUftdcAugMmNnBChBWMoeplS9ll7zOrr3DvUNP+x9vqJo21M3x3+1q/YjZLxdr/RWDBt4SuDDF9HZYFXa8TTwG9eZwp6JOYU8EILKxg3BVfxIIZCeg19GiVPkhCduwXAe2sGIDjPlAgVg+67hcgyH4lOntEqgj1qnO8rgKED/N3eU7s3oBqFZPbWwKY2/2SDt5DjN8x5o+K0/+UaUObqez root@localhost.localdomain'
+       state: present
+
+ 
+
+
