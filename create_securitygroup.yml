@@ -1,0 +1,20 @@
+---
+ - hosts: localhost
+   connection: local
+
+   tasks:
+   - name: create security group
+     ec2_group:
+       name: "security_group_with_ansible"
+       description: "create_security_group_with_ansible"
+       vpc_id: "vpc-9e7539f6"
+       region: "ap-south-1"
+       rules:
+        - proto: tcp
+          from_port: 80
+          to_port: 80
+          cidr_ip: "0.0.0.0/0"
+        - proto: tcp
+          from_port: 22
+          to_port: 22
+          cidr_ip: "0.0.0.0/0"

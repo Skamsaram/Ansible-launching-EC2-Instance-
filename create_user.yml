@@ -1,0 +1,8 @@
+---
+- hosts: localhost
+  connection: local
+
+  tasks:
+  - iam_user:
+              name: ANSUSER
+              state: present 

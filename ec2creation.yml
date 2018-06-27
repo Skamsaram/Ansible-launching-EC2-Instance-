@@ -1,0 +1,50 @@
+
+---
+ - hosts: localhost
+   connection: local 
+ 
+   tasks:
+   - name: create_key_via_ansible
+     ec2_key:
+       name: key_created_with_ansible
+       key_material: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCr5nVW6pzUIMS5LQ2yRk5dsp4JcGYiBhQeWuduXoRFKIP927QK4iNxYTH8ljCeHLR9WR0u0265Fse65rhqZORsJWGk900G7fcUbpBki5a7DELM8Apg6ysJEi6DISbb6bIUftdcAugMmNnBChBWMoeplS9ll7zOrr3DvUNP+x9vqJo21M3x3+1q/YjZLxdr/RWDBt4SuDDF9HZYFXa8TTwG9eZwp6JOYU8EILKxg3BVfxIIZCeg19GiVPkhCduwXAe2sGIDjPlAgVg+67hcgyH4lOntEqgj1qnO8rgKED/N3eU7s3oBqFZPbWwKY2/2SDt5DjN8x5o+K0/+UaUObqez root@localhost.localdomain'
+       state: present 
+   
+   - name: Setting up Security_Firewall Group 
+     ec2_group:
+        name: "WebServer_security_group_with_ansible"
+        description: "create_security_group_for_EC2_Instance"
+        vpc_id: "vpc-9e7539f6"
+        region: ap-south-1
+        rules:
+         - proto: tcp
+           from_port: 80
+           to_port: 80
+           cidr_ip: 0.0.0.0/0
+         - proto: tcp
+           from_port: 22
+           to_port: 22
+           cidr_ip: 0.0.0.0/0
+        rules_egress:
+         - proto: all
+           cidr_ip: 0.0.0.0/0	
+   - name: Create_EC2_Instance_With_Ansible
+     ec2:
+       key_name: key_created_with_ansible
+       instance_type: t2.micro
+       image: ami-76d6f519
+       wait: yes
+       wait_timeout: 500
+       count: 1
+       instance_tags:
+                    Name: awslabserver
+                    Owner: Sarath
+       monitoring: no 
+       vpc_subnet_id: subnet-b34b3bdb
+       assign_public_ip: yes
+       group: WebServer_security_group_with_ansible
+       region: ap-south-1
+     register: ec2_out
+   - name: wait for SSH to come up
+     wait_for: host={{ item.public_dns_name}} port=22 delay=200 timeout=500 state=started
+     with_items: "{{ec2_out.instances}}"
